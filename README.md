@@ -14,7 +14,7 @@ npm install
 npm run dev
 ```
 
-3. Copy `.env.example` to `.env` and fill in the values for Firebase and MongoDB.
+3. Copy `.env.example` to `.env` and fill in the values for Firebase and MongoDB. Set both `API_URL` and `NEXT_PUBLIC_API_URL` to the backend URL so the frontend can reach the API.
 
 4. Run the Next.js development server:
 
@@ -22,11 +22,24 @@ npm run dev
 npm run dev
 ```
 
+5. **Before running tests**, ensure dependencies are installed in both the
+   project root and the `backend/` directory:
+
+```bash
+npm install
+cd backend && npm install
+```
+
 ## Project Structure
 
 - `app/` – Next.js application
 - `backend/` – Express API server
 - `docs/` – API documentation
+
+### Authentication
+
+Image uploads require a valid Supabase session token. Include an
+`Authorization: Bearer <token>` header when calling `/upload-image`.
 
 ## Scripts
 

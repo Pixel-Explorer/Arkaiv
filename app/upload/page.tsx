@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Upload, X, FileIcon } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 
 interface FilePreview {
   file: File;
@@ -13,6 +15,8 @@ interface FilePreview {
 
 export default function UploadPage() {
   const [selectedFiles, setSelectedFiles] = useState<FilePreview[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const { toast } = useToast();
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -38,6 +42,50 @@ export default function UploadPage() {
     });
   };
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (selectedFiles.length === 0) return;
+
+    setIsUploading(true);
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('You must be logged in to upload.');
+
+      for (const { file } of selectedFiles) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('userId', user.id);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload-image`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!res.ok) {
+          throw new Error('Failed to upload file');
+        }
+      }
+
+      toast({
+        title: 'Success',
+        description: 'Files uploaded successfully.',
+      });
+
+      setSelectedFiles(prev => {
+        prev.forEach(p => p.preview && URL.revokeObjectURL(p.preview));
+        return [];
+      });
+    } catch (err: any) {
+      toast({
+        title: 'Error',
+        description: err.message || 'Failed to upload files.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <div className="container mx-auto py-10">
       <Card className="max-w-2xl mx-auto">
@@ -51,7 +99,7 @@ export default function UploadPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
               <Input
                 type="file"
@@ -106,13 +154,14 @@ export default function UploadPage() {
               </div>
             )}
 
-            <Button 
-              className="w-full" 
-              disabled={selectedFiles.length === 0}
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={selectedFiles.length === 0 || isUploading}
             >
-              Upload {selectedFiles.length} {selectedFiles.length === 1 ? 'File' : 'Files'}
+              {isUploading ? 'Uploading...' : `Upload ${selectedFiles.length} ${selectedFiles.length === 1 ? 'File' : 'Files'}`}
             </Button>
-          </div>
+          </form>
         </CardContent>
       </Card>
     </div>
