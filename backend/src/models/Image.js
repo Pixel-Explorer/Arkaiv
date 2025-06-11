@@ -4,6 +4,7 @@ const imageSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   ev: Number,
   storagePath: String,
+  tokens: Number,
 }, { timestamps: true });
 
 export default mongoose.model('Image', imageSchema);

@@ -33,7 +33,31 @@ Upload a JPEG file and store metadata.
 {
   "_id": "<mongoId>",
   "ev": 8.5,
-  "storagePath": "<firebase path>"
+    "storagePath": "<firebase path>"
+  }
+```
+
+## GET `/leaderboard`
+Return top users by tokens.
+
+### Response
+```json
+[
+  { "id": "1", "name": "Jane", "tokens": 123 }
+]
+```
+
+## GET `/creator-stats/:id`
+Return image and token stats for a user.
+
+### Response
+```json
+{
+  "id": "1",
+  "name": "Jane",
+  "tokens": 123,
+  "badges": ["Contributor"],
+  "totalImages": 5
 }
 ```
 

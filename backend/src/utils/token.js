@@ -1,4 +1,6 @@
-export function rewardTokens(ev, weights = []) {
-  const avg = weights.length ? weights.reduce((a, b) => a + b, 0) / weights.length : 1;
-  return Math.round(ev * avg);
+export function rewardTokens(ev, position = 1, supplyWeight = 1) {
+  const max = 10;
+  const k = 0.1;
+  const logistic = 1 / (1 + Math.exp(-k * (position - 50)));
+  return Math.round(ev * logistic * supplyWeight * max);
 }
