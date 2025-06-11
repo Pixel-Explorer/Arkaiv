@@ -1,29 +1,39 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { supabase } from '@/lib/supabase';
-import { User } from '@supabase/supabase-js';
+import { useToast } from "@/hooks/use-toast";
+import { useSession } from "@/hooks/use-session";
 
 export default function ProfilePage() {
-  const [user, setUser] = useState<User | null>(null);
-  const router = useRouter();
+  const { user, loading } = useSession();
+  const { toast } = useToast();
+  const [userData, setUserData] = useState<any | null>(null);
 
   useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push('/login');
-        return;
+    if (!user) return;
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${user.id}`);
+        if (!res.ok) {
+          throw new Error('Request failed');
+        }
+        const data = await res.json();
+        setUserData(data);
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load user details.",
+          variant: "destructive",
+        });
       }
-      setUser(user);
     };
+    fetchData();
+  }, [user, toast]);
 
-    getUser();
-  }, [router]);
+  if (loading || !user) return null;
 
-  if (!user) return null;
+  const displayUser = userData || user;
 
   return (
     <div className="container mx-auto py-10">
@@ -35,16 +45,16 @@ export default function ProfilePage() {
           <div className="space-y-4">
             <div>
               <h3 className="font-medium">Email</h3>
-              <p className="text-gray-600">{user.email}</p>
+              <p className="text-gray-600">{displayUser.email}</p>
             </div>
             <div>
               <h3 className="font-medium">User ID</h3>
-              <p className="text-gray-600">{user.id}</p>
+              <p className="text-gray-600">{displayUser.id}</p>
             </div>
             <div>
               <h3 className="font-medium">Last Sign In</h3>
               <p className="text-gray-600">
-                {new Date(user.last_sign_in_at || '').toLocaleString()}
+                {new Date(displayUser.last_sign_in_at || '').toLocaleString()}
               </p>
             </div>
           </div>
