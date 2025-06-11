@@ -4,11 +4,12 @@ import { Storage } from 'firebase-admin/storage';
 import Image from '../models/Image.js';
 import { extractEV } from '../utils/ev.js';
 import { rewardTokens } from '../utils/token.js';
+import { authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.post('/upload-image', upload.single('file'), async (req, res) => {
+router.post('/upload-image', authenticate, upload.single('file'), async (req, res) => {
   try {
     const bucket = new Storage().bucket();
     const file = bucket.file(Date.now() + '-' + req.file.originalname);
@@ -16,7 +17,7 @@ router.post('/upload-image', upload.single('file'), async (req, res) => {
 
     const ev = extractEV(req.file.buffer);
     const image = await Image.create({
-      userId: req.body.userId,
+      userId: req.user?.id || req.body.userId,
       ev,
       storagePath: file.name,
     });

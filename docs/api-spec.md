@@ -23,10 +23,11 @@ Create a new user.
 ```
 
 ## POST `/upload-image`
-Upload a JPEG file and store metadata.
+Upload a JPEG file and store metadata. This endpoint requires an
+`Authorization: Bearer <token>` header containing a valid Supabase session
+token.
 
 - `file` – multipart form field
-- `userId` – ID of the uploader
 
 ### Response
 ```json
