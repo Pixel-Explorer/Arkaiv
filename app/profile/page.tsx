@@ -2,7 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 
@@ -22,6 +29,11 @@ export default function ProfilePage() {
 
     getUser();
   }, [router]);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push('/login');
+  };
 
   if (!user) return null;
 
@@ -49,6 +61,11 @@ export default function ProfilePage() {
             </div>
           </div>
         </CardContent>
+        <CardFooter>
+          <Button className="w-full" onClick={handleSignOut}>
+            Sign Out
+          </Button>
+        </CardFooter>
       </Card>
     </div>
   );
