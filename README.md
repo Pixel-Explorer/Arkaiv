@@ -28,6 +28,11 @@ npm run dev
 - `backend/` – Express API server
 - `docs/` – API documentation
 
+### Authentication
+
+Image uploads require a valid Supabase session token. Include an
+`Authorization: Bearer <token>` header when calling `/upload-image`.
+
 ## Scripts
 
 - `npm run dev` – start Next.js
