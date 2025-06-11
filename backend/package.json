@@ -1,0 +1,18 @@
+{
+  "name": "arkaiv-backend",
+  "version": "0.1.0",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "firebase-admin": "^12.0.0",
+    "mongoose": "^8.0.0",
+    "multer": "^1.4.5-lts.1",
+    "exif-parser": "^0.1.12",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5"
+  }
+}
