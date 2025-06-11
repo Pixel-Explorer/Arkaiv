@@ -22,6 +22,14 @@ npm run dev
 npm run dev
 ```
 
+5. **Before running tests**, ensure dependencies are installed in both the
+   project root and the `backend/` directory:
+
+```bash
+npm install
+cd backend && npm install
+```
+
 ## Project Structure
 
 - `app/` – Next.js application
