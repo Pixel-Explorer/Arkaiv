@@ -21,6 +21,10 @@ router.post('/upload-image', authenticate, upload.single('file'), async (req, re
     const bucket = new Storage().bucket();
     const file = bucket.file(Date.now() + '-' + req.file.originalname);
     await file.save(req.file.buffer, { contentType: req.file.mimetype });
+    const [publicUrl] = await file.getSignedUrl({
+      action: 'read',
+      expires: Date.now() + 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
 
     const ev = extractEV(req.file.buffer);
     const tokens = rewardTokens(ev);
@@ -29,6 +33,7 @@ router.post('/upload-image', authenticate, upload.single('file'), async (req, re
       userId,
       ev,
       storagePath: file.name,
+      publicUrl,
     });
 
     await TokenLedger.create({

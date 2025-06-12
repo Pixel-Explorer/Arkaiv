@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/site-header";
 interface ImageItem {
   _id: string;
   storagePath: string;
+  publicUrl: string;
 }
 
 export default function BrowsePage() {
@@ -38,7 +39,7 @@ export default function BrowsePage() {
           {images.map((img) => (
             <Link href={`/images/${img._id}`} key={img._id} className="block">
               <img
-                src={img.storagePath}
+                src={img.publicUrl}
                 alt="Image thumbnail"
                 className="aspect-square w-full rounded-md object-cover border"
               />

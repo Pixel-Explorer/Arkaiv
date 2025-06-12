@@ -35,7 +35,8 @@ token.
 {
   "_id": "<mongoId>",
   "ev": 8.5,
-  "storagePath": "<firebase path>"
+  "storagePath": "<firebase path>",
+  "publicUrl": "<public url>"
 }
 ```
 
@@ -45,6 +46,6 @@ Return recent images.
 ### Response
 ```json
 [
-  { "_id": "1", "ev": 10.2, "storagePath": "..." }
+  { "_id": "1", "ev": 10.2, "storagePath": "...", "publicUrl": "..." }
 ]
 ```
