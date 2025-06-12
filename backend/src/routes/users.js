@@ -34,7 +34,15 @@ router.get('/creator-stats/:id', async (req, res) => {
       { $group: { _id: '$userId', tokens: { $sum: '$tokens' } } },
     ]);
 
-    res.json({ supabaseId: user.supabaseId, totalTokens: result[0]?.tokens || 0 });
+    const transactions = await TokenLedger.find({ userId: user._id })
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    res.json({
+      supabaseId: user.supabaseId,
+      totalTokens: result[0]?.tokens || 0,
+      transactions,
+    });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

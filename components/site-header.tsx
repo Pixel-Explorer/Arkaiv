@@ -26,6 +26,9 @@ export function SiteHeader() {
             <Link href="/about" className="text-sm font-medium transition-colors hover:text-primary">
               About
             </Link>
+            <Link href="/wallet" className="text-sm font-medium transition-colors hover:text-primary">
+              Wallet
+            </Link>
           </nav>
           <div className="flex items-center space-x-4">
             <Button variant="ghost" asChild>
