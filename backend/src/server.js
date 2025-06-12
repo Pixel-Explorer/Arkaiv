@@ -7,6 +7,7 @@ import fs from 'fs';
 
 import userRoutes from './routes/users.js';
 import imageRoutes from './routes/images.js';
+import hashtagRoutes from './routes/hashtags.js';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ mongoose.connect(process.env.MONGODB_URI);
 
 app.use('/api', userRoutes);
 app.use('/api', imageRoutes);
+app.use('/api', hashtagRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
