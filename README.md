@@ -14,7 +14,7 @@ npm install
 npm run dev
 ```
 
-3. Copy `.env.example` to `.env` and fill in the values for Firebase and MongoDB. Set both `API_URL` and `NEXT_PUBLIC_API_URL` to the backend URL so the frontend can reach the API.
+3. Copy `.env.example` to `.env` and fill in credentials for Firebase, MongoDB, and Supabase. `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` must be provided for the app to build and authenticate users. Set both `API_URL` and `NEXT_PUBLIC_API_URL` to the backend URL.
 
 4. Run the Next.js development server:
 
