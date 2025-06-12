@@ -8,9 +8,16 @@ import { authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
+const SUPPORTED_MIME_REGEX = /^image\//;
 
 router.post('/upload-image', authenticate, upload.single('file'), async (req, res) => {
   try {
+    if (!req.file) {
+      throw new Error('No file uploaded');
+    }
+    if (!SUPPORTED_MIME_REGEX.test(req.file.mimetype)) {
+      return res.status(400).json({ error: 'Unsupported MIME type' });
+    }
     const bucket = new Storage().bucket();
     const file = bucket.file(Date.now() + '-' + req.file.originalname);
     await file.save(req.file.buffer, { contentType: req.file.mimetype });

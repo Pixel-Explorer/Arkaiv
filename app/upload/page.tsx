@@ -106,7 +106,7 @@ export default function UploadPage() {
                 className="hidden"
                 id="file-upload"
                 multiple
-                accept="image/*,.pdf,.doc,.docx"
+                accept="image/*"
                 onChange={handleFileSelect}
               />
               <label
