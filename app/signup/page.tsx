@@ -30,7 +30,7 @@ export default function SignUpPage() {
       const res = await fetch(`${apiUrl}/register-user`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: data.user.id, email, name })
+        body: JSON.stringify({ supabaseId: data.user.id, email, name })
       });
 
       if (!res.ok) throw new Error('Failed to register user');
