@@ -23,11 +23,12 @@ Create a new user.
 ```
 
 ## POST `/upload-image`
-Upload a JPEG file and store metadata. This endpoint requires an
+Upload an image file and store metadata. This endpoint requires an
 `Authorization: Bearer <token>` header containing a valid Supabase session
 token.
 
 - `file` – multipart form field
+- Supported formats: JPEG, PNG, GIF, TIFF, WebP, HEIF/HEIC, AVIF and common camera RAW files such as DNG, NEF, CR2/CR3, ARW, ORF, RW2 and RAF.
 
 ### Response
 ```json
