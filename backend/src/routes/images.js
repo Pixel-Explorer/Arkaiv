@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import { Storage } from 'firebase-admin/storage';
 import Image from '../models/Image.js';
+import TokenLedger from '../models/TokenLedger.js';
 import { extractEV } from '../utils/ev.js';
 import { authenticate } from '../middleware/auth.js';
 
@@ -22,12 +23,21 @@ router.post('/upload-image', authenticate, upload.single('file'), async (req, re
     await file.save(req.file.buffer, { contentType: req.file.mimetype });
 
     const ev = extractEV(req.file.buffer);
+    const tokens = rewardTokens(ev);
+    const userId = req.user?.id || req.body.userId;
     const image = await Image.create({
-      userId: req.user?.id || req.body.userId,
+      userId,
       ev,
       storagePath: file.name,
     });
-    res.json(image);
+
+    await TokenLedger.create({
+      userId,
+      imageId: image._id,
+      tokens,
+    });
+
+    res.json({ image, tokens });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
