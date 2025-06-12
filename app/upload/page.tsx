@@ -55,7 +55,6 @@ export default function UploadPage() {
       for (const { file } of selectedFiles) {
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('userId', user.id);
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload-image`, {
           method: 'POST',
           body: formData,
