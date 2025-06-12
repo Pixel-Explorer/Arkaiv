@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import { Storage } from 'firebase-admin/storage';
 import Image from '../models/Image.js';
+import User from '../models/User.js';
 import { extractEV } from '../utils/ev.js';
 import { rewardTokens } from '../utils/token.js';
 import { authenticate } from '../middleware/auth.js';
@@ -16,8 +17,14 @@ router.post('/upload-image', authenticate, upload.single('file'), async (req, re
     await file.save(req.file.buffer, { contentType: req.file.mimetype });
 
     const ev = extractEV(req.file.buffer);
+
+    const user = await User.findOne({ supabaseId: req.user.id });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
     const image = await Image.create({
-      userId: req.user?.id || req.body.userId,
+      userId: user._id,
       ev,
       storagePath: file.name,
     });
