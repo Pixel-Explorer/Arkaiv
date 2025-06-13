@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 
 interface Entry {
   id: string;
@@ -13,6 +15,7 @@ interface Entry {
 export default function ArchivePage() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [text, setText] = useState("");
+  const { toast } = useToast();
 
   useEffect(() => {
     const stored = localStorage.getItem("archive_entries");
@@ -29,12 +32,28 @@ export default function ArchivePage() {
     localStorage.setItem("archive_entries", JSON.stringify(entries));
   }, [entries]);
 
-  const addEntry = (e: React.FormEvent) => {
+  const addEntry = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!text.trim()) return;
-    const entry: Entry = { id: Date.now().toString(), text: text.trim() };
+    const entryText = text.trim();
+    const entry: Entry = { id: Date.now().toString(), text: entryText };
     setEntries((prev) => [...prev, entry]);
     setText("");
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/archive`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+        },
+        body: JSON.stringify({ text: entryText })
+      });
+    } catch (err) {
+      console.error(err);
+      toast({ title: 'Error', description: 'Failed to save entry', variant: 'destructive' });
+    }
   };
 
   const removeEntry = (id: string) => {

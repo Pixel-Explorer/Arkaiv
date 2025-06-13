@@ -49,3 +49,22 @@ Return recent images.
   { "_id": "1", "ev": 10.2, "storagePath": "...", "publicUrl": "..." }
 ]
 ```
+
+## POST `/archive`
+Add a text entry to the authenticated user's history. Requires an
+`Authorization: Bearer <token>` header.
+
+### Request Body
+```json
+{
+  "text": "My note"
+}
+```
+
+### Response
+```json
+{
+  "text": "My note",
+  "createdAt": "2025-01-01T00:00:00.000Z"
+}
+```
