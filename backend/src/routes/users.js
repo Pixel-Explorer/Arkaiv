@@ -48,4 +48,9 @@ router.get('/creator-stats/:id', async (req, res) => {
   }
 });
 
+// Placeholder endpoint for planned archive feature
+router.get('/archive', (req, res) => {
+  res.status(501).json({ error: 'Not implemented' });
+});
+
 export default router;
