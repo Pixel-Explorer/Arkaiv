@@ -3,6 +3,7 @@ import multer from 'multer';
 import { Storage } from 'firebase-admin/storage';
 import Image from '../models/Image.js';
 import TokenLedger from '../models/TokenLedger.js';
+import User from '../models/User.js';
 import { extractEV } from '../utils/ev.js';
 import { authenticate } from '../middleware/auth.js';
 
@@ -28,7 +29,13 @@ router.post('/upload-image', authenticate, upload.single('file'), async (req, re
 
     const ev = extractEV(req.file.buffer);
     const tokens = rewardTokens(ev);
-    const userId = req.user?.id || req.body.userId;
+
+    const userDoc = await User.findOne({ supabaseId: req.user.id });
+    if (!userDoc) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    const userId = userDoc._id;
+
     const image = await Image.create({
       userId,
       ev,
