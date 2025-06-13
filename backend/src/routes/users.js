@@ -1,6 +1,7 @@
 import express from 'express';
 import User from '../models/User.js';
 import TokenLedger from '../models/TokenLedger.js';
+import { authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -43,6 +44,21 @@ router.get('/creator-stats/:id', async (req, res) => {
       totalTokens: result[0]?.tokens || 0,
       transactions,
     });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+router.post('/archive', authenticate, async (req, res) => {
+  try {
+    const { text } = req.body;
+    if (!text) return res.status(400).json({ error: 'Missing text' });
+    const user = await User.findOne({ supabaseId: req.user.id });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    const entry = { text, createdAt: new Date() };
+    user.history.push(entry);
+    await user.save();
+    res.json(entry);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
