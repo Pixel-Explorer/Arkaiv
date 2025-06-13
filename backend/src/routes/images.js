@@ -23,10 +23,14 @@ router.post('/upload-image', authenticate, upload.single('file'), async (req, re
     const bucket = new Storage().bucket();
     const file = bucket.file(Date.now() + '-' + req.file.originalname);
     await file.save(req.file.buffer, { contentType: req.file.mimetype });
-    const [publicUrl] = await file.getSignedUrl({
-      action: 'read',
-      expires: Date.now() + 7 * 24 * 60 * 60 * 1000 // 7 days
-    });
+    let publicUrl = '';
+    if (typeof file.getSignedUrl === 'function') {
+      const [url] = await file.getSignedUrl({
+        action: 'read',
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000 // 7 days
+      });
+      publicUrl = url;
+    }
 
     const ev = extractEV(req.file.buffer);
     const tokens = rewardTokens(ev);
