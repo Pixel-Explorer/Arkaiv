@@ -5,6 +5,7 @@ import Image from '../models/Image.js';
 import TokenLedger from '../models/TokenLedger.js';
 import User from '../models/User.js';
 import { extractEV } from '../utils/ev.js';
+import { rewardTokens } from '../utils/token.js';
 import { authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
