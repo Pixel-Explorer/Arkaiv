@@ -1,9 +1,7 @@
-import mongoose from 'mongoose';
+import express from 'express';
+import User from '../models/User.js';
+import Image from '../models/Image.js';
+import TokenLedger from '../models/TokenLedger.js';
 
-const userSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true },
-  supabaseId: { type: String, unique: true },
-  name: String,
-}, { timestamps: true });
-
-export default mongoose.model('User', userSchema);
+const router = express.Router();
+// …
