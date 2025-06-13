@@ -47,7 +47,29 @@ Return recent images.
 ```json
 [
   { "_id": "1", "ev": 10.2, "storagePath": "...", "publicUrl": "..." }
-]
+  ]
+```
+
+## GET `/creator-stats/:id`
+Return token statistics for a creator.
+
+### URL Parameters
+- `id` – Supabase user ID.
+
+### Response
+```json
+{
+  "supabaseId": "abcd123",
+  "totalTokens": 42,
+  "transactions": [
+    {
+      "_id": "1",
+      "imageId": "1a2b3c",
+      "tokens": 5,
+      "createdAt": "2023-01-01T00:00:00.000Z"
+    }
+  ]
+}
 ```
 
 ## POST `/archive`
