@@ -4,6 +4,7 @@ import { Storage } from 'firebase-admin/storage';
 import Image from '../models/Image.js';
 import TokenLedger from '../models/TokenLedger.js';
 import { extractEV } from '../utils/ev.js';
+import { rewardTokens } from '../utils/token.js';
 import { authenticate } from '../middleware/auth.js';
 
 const router = express.Router();
