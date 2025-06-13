@@ -10,6 +10,19 @@ import imageRoutes from './routes/images.js';
 
 dotenv.config();
 
+const requiredVars = [
+  'MONGODB_URI',
+  'NEXT_PUBLIC_SUPABASE_URL',
+  'NEXT_PUBLIC_SUPABASE_ANON_KEY',
+  'FIREBASE_SERVICE_ACCOUNT_PATH',
+  'FIREBASE_STORAGE_BUCKET'
+];
+const missing = requiredVars.filter((v) => !process.env[v]);
+if (missing.length) {
+  console.error(`Missing required environment variables: ${missing.join(', ')}`);
+  process.exit(1);
+}
+
 const app = express();
 app.use(cors());
 app.use(express.json());
